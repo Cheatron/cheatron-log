@@ -1,7 +1,7 @@
 import { describe, test, expect, beforeEach, afterEach, spyOn } from "bun:test";
 import fs from "node:fs";
 import path from "node:path";
-import { createLogger } from "../src";
+import { createLogger } from "../src/index.js";
 
 import { Logger } from "winston";
 
@@ -90,7 +90,7 @@ describe("createLogger", () => {
     // winston-daily-rotate-file usually exposes itself as a transport with name 'dailyRotateFile' or similar,
     // but winston transports array contains instances.
     // We can check if the transport is present.
-    const hasRotateTransport = logger.transports.some(t => t.constructor.name === 'DailyRotateFile');
+    const hasRotateTransport = logger.transports.some((t: any) => t.constructor.name === 'DailyRotateFile');
     expect(hasRotateTransport).toBe(true);
   });
 

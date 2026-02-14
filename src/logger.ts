@@ -1,4 +1,10 @@
 // Polyfill for BigInt serialization
+declare global {
+    interface BigInt {
+        toJSON(): string;
+    }
+}
+
 BigInt.prototype.toJSON = function () {
     return this.toString();
 };
@@ -6,8 +12,8 @@ BigInt.prototype.toJSON = function () {
 import winston from 'winston';
 import path from 'node:path';
 import fs from 'node:fs';
-import { levels, colors, type LogLevel } from './levels';
-import { createConsoleTransport, createFileTransport, createDailyRotateTransport } from './transports';
+import { levels, colors, type LogLevel } from './levels.js';
+import { createConsoleTransport, createFileTransport, createDailyRotateTransport } from './transports.js';
 
 // Register custom colors
 winston.addColors(colors);

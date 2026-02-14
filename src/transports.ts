@@ -1,6 +1,6 @@
 import winston from 'winston';
 import 'winston-daily-rotate-file';
-import { prettyConsole, jsonLine } from './formats';
+import { prettyConsole, jsonLine } from './formats.js';
 
 /**
  * Colored console transport
