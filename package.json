@@ -16,6 +16,15 @@
     "winston",
     "logging"
   ],
+  "author": "Cheatron",
+  "homepage": "https://github.com/Cheatron/cheatron-log#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Cheatron/cheatron-log.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Cheatron/cheatron-log/issues"
+  },
   "scripts": {
     "build": "tsc",
     "prepublishOnly": "bun run build",

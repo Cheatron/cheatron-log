@@ -1,65 +1,59 @@
-# cheatron-log
+# @cheatron/log
 
-Advanced Winston-based logging library for the Cheatron ecosystem.
+Advanced Winston-based logging library for the Cheatron ecosystem. Featuring a shared static logger system that allows multiple packages to share the same configuration and log output.
 
 ## Features
 
-- **6 Log Levels** — `fatal`, `error`, `warn`, `info`, `debug`, `trace`
-- **Colored Console** — Pretty formatted output with colors per level
-- **JSONL File Logging** — Structured JSON Lines format, one object per line
-- **Daily Rotation** — Auto-rotating log files with configurable retention
-- **Child Loggers** — Scoped category loggers for modules
-- **Backwards Compatible** — Same category-first API as Cheatron core
+- **Shared Static Logger** — Configure once in your main app, use everywhere via `createLogHelper`.
+- **Scoped Logging** — Automatically prefix log categories with a title (e.g. `Native/Process`).
+- **6 Log Levels** — `fatal`, `error`, `warn`, `info`, `debug`, `trace`.
+- **Colored Console** — Pretty formatted output with colors per level.
+- **JSONL File Logging** — Structured JSON Lines format, one object per line.
+- **Daily Rotation** — Auto-rotating log files with configurable retention.
+- **Child Loggers** — Scoped category loggers for modules.
 
 ## Installation
 
 ```bash
-bun install cheatron-log
+bun add @cheatron/log
 ```
 
 ## Usage
 
-### Basic
+### 1. Configure once (Main App)
 
 ```typescript
-import { createLogger } from "cheatron-log";
+import { configureLogger } from '@cheatron/log';
 
-const { helpers: log } = createLogger();
-
-log.info("App", "Application started");
-log.error("Network", "Connection failed", { host: "localhost", port: 8080 });
-log.debug("Thread", "Context loaded", { tid: 1234 });
-```
-
-### With File Logging
-
-```typescript
-const { helpers: log } = createLogger({
-  level: "debug",
-  logsDir: "./logs",
-  logFileName: "app.log",
-});
-```
-
-### With Daily Rotation
-
-```typescript
-const { helpers: log } = createLogger({
-  level: "debug",
-  logsDir: "./logs",
+configureLogger({
+  level: 'debug',
+  logsDir: './logs',
   dailyRotation: true,
-  maxFiles: "30d",
 });
 ```
 
-### Child Loggers
+### 2. Create Scoped Helpers (Packages/Modules)
+
+Use `createLogHelper` to create a logger instance that automatically prefixes all categories with a title. All helpers share the same underlying global logger instance.
 
 ```typescript
-const { helpers: log } = createLogger();
+// in @cheatron/cheatron-native
+import { createLogHelper } from '@cheatron/log';
 
-const threadLog = log.child("Thread");
-threadLog.info("Opened handle");
-threadLog.debug("Context retrieved", { rip: "0x7FF12345" });
+const log = createLogHelper('Native');
+
+log.info('App', 'Module started'); // category: Native/App
+```
+
+### Basic Logger (Manual Instance)
+
+If you need a standalone logger instance that doesn't share the global state:
+
+```typescript
+import { createLogger } from '@cheatron/log';
+
+const { helpers: log } = createLogger({ level: 'info' });
+log.info('App', 'Standalone log');
 ```
 
 ### Log Levels
@@ -73,29 +67,17 @@ threadLog.debug("Context retrieved", { rip: "0x7FF12345" });
 | `debug` | ⚪ Gray   | Development details            |
 | `trace` | 🪨 Dim    | Low-level internal tracing     |
 
-### Console Output
+## API Reference
 
-```
-13:35:58.386 fatal [System]: System crash detected
-13:35:58.394 error [Network]: Connection refused
-13:35:58.394 warn  [Memory]: High memory usage
-13:35:58.394 info  [App]: Application started
-13:35:58.394 debug [Thread]: Thread context loaded
-13:35:58.394 trace [Internal]: GC cycle completed
-```
+### Global Singleton API
 
-### JSONL File Output
+- `configureLogger(opts)`: Reconfigures the global shared logger instance.
+- `createLogHelper(title)`: Returns a `LoggerHelpers` instance that prefixes categories with `title/`.
+- `getLogger()`: Returns the global `LoggerHelpers`.
+- `getWinstonLogger()`: Returns the underlying Winston instance.
+- `getLogFilePath()`: Returns current log file path (if enabled).
 
-```json
-{"timestamp":"13:35:58.386","level":"fatal","category":"System","message":"System crash detected","data":{"code":"FATAL_001"}}
-{"timestamp":"13:35:58.394","level":"info","category":"App","message":"Application started"}
-```
-
-## API
-
-### `createLogger(opts?)`
-
-Returns `{ logger, helpers, logFilePath }`.
+### `createLogger(opts?)` Options
 
 | Option          | Type       | Default   | Description                |
 | --------------- | ---------- | --------- | -------------------------- |
@@ -105,21 +87,17 @@ Returns `{ logger, helpers, logFilePath }`.
 | `dailyRotation` | `boolean`  | `false`   | Enable daily file rotation |
 | `maxFiles`      | `string`   | `'30d'`   | Retention period           |
 
-### `helpers` (LoggerHelpers)
+### `LoggerHelpers`
 
 ```typescript
-helpers.fatal(category, message, data?)
-helpers.error(category, message, data?)
-helpers.warn(category, message, data?)
-helpers.info(category, message, data?)
-helpers.debug(category, message, data?)
-helpers.trace(category, message, data?)
-helpers.child(category) // Returns ChildLogger
+log.fatal(category, message, data?)
+log.error(category, message, data?)
+log.warn(category, message, data?)
+log.info(category, message, data?)
+log.debug(category, message, data?)
+log.trace(category, message, data?)
+log.child(category) // Returns ChildLogger
 ```
-
-### `ChildLogger`
-
-Same as helpers but without the category parameter — it's fixed at creation.
 
 ## License
 
