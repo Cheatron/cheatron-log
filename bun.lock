@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "cheatron-log",
+      "name": "@cheatron/log",
       "dependencies": {
         "winston": "3.19.0",
         "winston-daily-rotate-file": "^5.0.0",
@@ -15,7 +15,7 @@
         "eslint-config-prettier": "^10.1.8",
         "globals": "^17.3.0",
         "prettier": "^3.8.1",
-        "typescript": "^5",
+        "typescript": "^5.9.3",
         "typescript-eslint": "^8.56.0",
       },
     },
