@@ -1,9 +1,9 @@
 {
   "name": "@cheatron/cheatron-log",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "Advanced Winston-based logging library for the Cheatron ecosystem",
-  "main": "./dist/src/index.js",
-  "types": "./dist/src/index.d.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "type": "module",
   "files": [
     "dist",
