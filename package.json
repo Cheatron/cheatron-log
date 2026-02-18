@@ -28,7 +28,7 @@
   "scripts": {
     "build": "tsc",
     "prepublishOnly": "bun run build",
-    "test": "bun test",
+    "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint \"{src,tests}/**/*.{js,ts,jsx,tsx}\" --cache",
     "lint:fix": "eslint \"{src,tests}/**/*.{js,ts,jsx,tsx}\" --fix",
     "format": "prettier --write \"{src,tests}/**/*.{js,ts,jsx,tsx,css,md,json}\"",
